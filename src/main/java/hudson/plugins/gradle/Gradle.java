@@ -30,10 +30,12 @@ public class Gradle extends Builder implements DryRun {
     private final boolean makeExecutable;
     private final boolean fromRootBuildScriptDir;
     private final boolean useWorkspaceAsHome;
+    private final boolean useWorkspaceAsM2Home;
 
     @DataBoundConstructor
     public Gradle(String description, String switches, String tasks, String rootBuildScriptDir, String buildFile,
-                  String gradleName, boolean useWrapper, boolean makeExecutable, boolean fromRootBuildScriptDir, boolean useWorkspaceAsHome) {
+                  String gradleName, boolean useWrapper, boolean makeExecutable, boolean fromRootBuildScriptDir,
+                  boolean useWorkspaceAsHome, boolean useWorkspaceAsM2Home) {
         this.description = description;
         this.switches = switches;
         this.tasks = tasks;
@@ -44,6 +46,7 @@ public class Gradle extends Builder implements DryRun {
         this.makeExecutable = makeExecutable;
         this.fromRootBuildScriptDir = fromRootBuildScriptDir;
         this.useWorkspaceAsHome = useWorkspaceAsHome;
+        this.useWorkspaceAsM2Home = useWorkspaceAsM2Home;
     }
 
     @SuppressWarnings("unused")
@@ -94,6 +97,11 @@ public class Gradle extends Builder implements DryRun {
     @SuppressWarnings("unused")
     public boolean isUseWorkspaceAsHome() {
         return useWorkspaceAsHome;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isUseWorkspaceAsM2Home() {
+        return useWorkspaceAsM2Home;
     }
 
     public GradleInstallation getGradle() {
@@ -236,6 +244,11 @@ public class Gradle extends Builder implements DryRun {
         if (useWorkspaceAsHome) {
             // Make user home relative to the workspace, so that files aren't shared between builds
             env.put("GRADLE_USER_HOME", build.getWorkspace().getRemote());
+        }
+
+        if (useWorkspaceAsM2Home) {
+            // Make M2 home relative to the workspace, so that files aren't shared between builds
+            env.put("MAVEN_OPTS", "-Dmaven.repo.local=" + build.getWorkspace().getRemote());
         }
 
         if (!launcher.isUnix()) {
