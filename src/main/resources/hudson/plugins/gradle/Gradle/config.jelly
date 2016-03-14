@@ -50,6 +50,10 @@
         <f:checkbox default="false"/>
     </f:entry>
 
+    <f:entry title="${%Force LocalRepo to use workspace}" field="useWorkspaceAsM2Home">
+        <f:checkbox default="false"/>
+    </f:entry>
+
     <f:entry title="${%Pass job parameters as Gradle properties}" field="passAsProperties">
         <f:checkbox default="false"/>
     </f:entry>
